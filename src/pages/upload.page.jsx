@@ -1,4 +1,5 @@
-import { useState } from "react";  // this stores component data
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export const Upload = () => {
   const [fileName, setFileName] = useState("");
@@ -20,7 +21,6 @@ export const Upload = () => {
 
     localStorage.setItem("files", JSON.stringify(updatedFiles));
 
-    // optional: clear form
     setFileName("");
     setFolder("");
     setDescription("");
@@ -29,6 +29,10 @@ export const Upload = () => {
   return (
     <div className="upload">
       <h1>Upload File</h1>
+
+      <Link to="/">
+        <button className="back-btn">← Back to Dashboard</button>
+      </Link>
 
       <form onSubmit={handleSubmit}>
         <div>

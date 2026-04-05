@@ -1,40 +1,62 @@
-import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 export const Dashboard = () => {
-  const [files, setFiles] = useState([]);
-
-  useEffect(() => {
-    const savedFiles = JSON.parse(localStorage.getItem("files")) || [];
-    setFiles(savedFiles);
-  }, []);
-
   return (
-    <div className="dashboard">
-      <h1>My Files</h1>
+    <div className="dashboard-layout">
+      <aside className="sidebar">
+        <h2 className="logo">illyBox</h2>
+        <nav>
+          <p className="active-link">Home</p>
+          <p>Files</p>
+          <p>Images</p>
+          <p>Shared</p>
+        </nav>
+      </aside>
 
-      <Link to="/upload">
-        <button>Upload New File</button>
-      </Link>
+      <main className="dashboard-content">
+        <div className="top-bar">
+          <h1>Home</h1>
+          <input type="text" placeholder="Search files..." className="search-bar" />
+        </div>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Folder</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {files.map((file) => (
-            <tr key={file.id}>
-              <td>{file.fileName}</td>
-              <td>{file.folder}</td>
-              <td>{file.date}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+        <p className="last-login">Last Login: 3 Days Ago</p>
+
+        <div className="dashboard-header">
+          <h2>My Files</h2>
+          <Link to="/upload">
+            <button className="upload-btn">Upload New File</button>
+          </Link>
+        </div>
+
+        <div className="file-table">
+          <div className="file-table-header">
+            <span>Name</span>
+            <span>Folder</span>
+            <span>Date</span>
+            <span>Actions</span>
+          </div>
+
+          <div className="file-row">
+            <span>resume.pdf</span>
+            <span>School</span>
+            <span>04/05/2026</span>
+            <span>
+              <button>Edit</button>
+              <button>Delete</button>
+            </span>
+          </div>
+
+          <div className="file-row">
+            <span>project-notes.docx</span>
+            <span>Work</span>
+            <span>04/04/2026</span>
+            <span>
+              <button>Edit</button>
+              <button>Delete</button>
+            </span>
+          </div>
+        </div>
+      </main>
     </div>
   );
 };
