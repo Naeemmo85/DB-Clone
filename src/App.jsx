@@ -2,6 +2,7 @@ import './App.css';
 import { Routes, Route } from "react-router-dom";
 import { Dashboard } from './pages/dashboard.page';
 import { Upload } from './pages/upload.page';
+import { File } from './pages/file-details.page';
 
 const App = () => {
   return (
@@ -9,6 +10,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/upload" element={<Upload />} />
+        <Route path="/file" element={<File />} />
       </Routes>
     </div>
   );

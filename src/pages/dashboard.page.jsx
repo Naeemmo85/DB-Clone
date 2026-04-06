@@ -1,13 +1,16 @@
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const Dashboard = () => {
+const navigate = useNavigate();
+
   return (
     <div className="dashboard-layout">
       <aside className="sidebar">
         <h2 className="logo">illyBox</h2>
         <nav>
           <p className="active-link">Home</p>
-          <p>Files</p>
+          <p onClick={() => navigate("/file")}>Files</p>
           <p>Images</p>
           <p>Shared</p>
         </nav>
