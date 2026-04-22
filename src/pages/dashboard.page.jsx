@@ -27,7 +27,7 @@ const navigate = useNavigate();
         <div className="dashboard-header">
           <h2>My Files</h2>
           <Link to="/upload">
-            <button className="upload-btn">Upload New File</button>
+            <button className="upload-btn">+ Upload New File</button>
           </Link>
         </div>
 
