@@ -1,50 +1,61 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useFiles } from "../context/FilesContext";
+import { useTheme } from "../context/ThemeContext";
+import { StorageBar } from "../components/StorageBar";
 
 export const Upload = () => {
   const navigate = useNavigate();
-  const [fileName, setFileName] = useState("");
-  const [folder, setFolder] = useState("");
+  const { addFile } = useFiles();
+  const { darkMode, toggleDarkMode } = useTheme();
+
+  const [fileName,    setFileName]    = useState("");
+  const [folder,      setFolder]      = useState("");
   const [description, setDescription] = useState("");
+  const [size,        setSize]        = useState("");
+  const [fileInput,   setFileInput]   = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!fileName.trim()) return;
 
     const newFile = {
-      fileName,
-      folder,
-      description,
-      date: new Date().toLocaleDateString(),
+      id:          Date.now(),
+      name:        fileName.trim(),
+      folder:      folder.trim() || "General",
+      description: description.trim(),
+      date:        new Date().toLocaleDateString("en-US"),
+      size:        size.trim() || "—",
+      status:      "private",
     };
 
-    const existingFiles = JSON.parse(localStorage.getItem("files")) || [];
-    const updatedFiles = [...existingFiles, newFile];
-    localStorage.setItem("files", JSON.stringify(updatedFiles));
-
+    addFile(newFile);
     setFileName("");
     setFolder("");
     setDescription("");
-
+    setSize("");
+    setFileInput(null);
     navigate("/");
   };
 
   return (
     <div className="dashboard-layout">
 
-      {/* SIDEBAR */}
       <div className="sidebar">
         <div className="logo"><h2>illyBox</h2></div>
         <nav>
           <p onClick={() => navigate("/")}>Home</p>
           <p onClick={() => navigate("/file")}>Files</p>
-          <p className="active-link">Images</p>
+          <p className="active-link">Upload</p>
           <p>Shared</p>
+          <StorageBar />
+          <button className="dark-mode-btn" onClick={toggleDarkMode}>
+            {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
+          </button>
         </nav>
       </div>
 
-      {/* MAIN CONTENT */}
       <div className="dashboard-content">
-
         <div className="top-bar">
           <h1>Upload File</h1>
           <button className="back-btn" onClick={() => navigate("/")}>← Back to Dashboard</button>
@@ -58,6 +69,7 @@ export const Upload = () => {
               value={fileName}
               onChange={(e) => setFileName(e.target.value)}
               placeholder="e.g. resume.pdf"
+              required
             />
           </div>
 
@@ -72,6 +84,16 @@ export const Upload = () => {
           </div>
 
           <div>
+            <label>File Size:</label>
+            <input
+              type="text"
+              value={size}
+              onChange={(e) => setSize(e.target.value)}
+              placeholder="e.g. 2.4 MB, 340 KB"
+            />
+          </div>
+
+          <div>
             <label>Description:</label>
             <textarea
               value={description}
@@ -82,12 +104,14 @@ export const Upload = () => {
 
           <div>
             <label>Select File:</label>
-            <input type="file" />
+            <input
+              type="file"
+              onChange={(e) => setFileInput(e.target.files[0] || null)}
+            />
           </div>
 
           <button type="submit" className="upload-btn">Upload</button>
         </form>
-
       </div>
     </div>
   );
