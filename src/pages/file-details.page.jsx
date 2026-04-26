@@ -13,11 +13,31 @@ export const File = () => {
   const [search,       setSearch]       = useState("");
   const [sortBy,       setSortBy]       = useState("date-desc");
 
+  const handleDownload = (file) => {
+    const content = `
+illyBox - File Download
+=======================
+File Name:   ${file.name}
+Folder:      ${file.folder}
+Size:        ${file.size}
+Date:        ${file.date}
+Status:      ${file.status}
+Description: ${file.description || "No description provided"}
+    `.trim();
+
+    const blob = new Blob([content], { type: "text/plain" });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement("a");
+    a.href     = url;
+    a.download = file.name;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   const sortedFiltered = useMemo(() => {
     const searched = files.filter((f) =>
       f.name.toLowerCase().includes(search.toLowerCase())
     );
-
     return [...searched].sort((a, b) => {
       switch (sortBy) {
         case "name-asc":  return a.name.localeCompare(b.name);
@@ -48,6 +68,7 @@ export const File = () => {
         <nav>
           <p onClick={() => navigate("/")}>Home</p>
           <p className="active-link" onClick={() => navigate("/file")}>Files</p>
+          <p onClick={() => navigate("/upload")}>Upload</p>
           <p>Images</p>
           <p>Shared</p>
         </nav>
@@ -142,17 +163,24 @@ export const File = () => {
               <p><strong>Description:</strong> {selectedFile.description}</p>
             )}
             <div style={{ display: "flex", gap: "10px" }}>
-            <button
-              className="delete-btn"
-              onClick={() => {
-                if (window.confirm(`Delete "${selectedFile.name}"?`)) {
-                  deleteFile(selectedFile.id);
-                  setSelectedFile(null);
-                }
-              }}
-            >
-              Delete
-            </button>
+              <button
+                className="upload-btn"
+                onClick={() => handleDownload(selectedFile)}
+              >
+                Download
+              </button>
+              <button
+                className="delete-btn"
+                onClick={() => {
+                  if (window.confirm(`Delete "${selectedFile.name}"?`)) {
+                    deleteFile(selectedFile.id);
+                    setSelectedFile(null);
+                  }
+                }}
+              >
+                Delete
+              </button>
+              <button onClick={() => setSelectedFile(null)}>Close</button>
             </div>
           </div>
         )}

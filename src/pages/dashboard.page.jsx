@@ -32,11 +32,31 @@ export const Dashboard = () => {
     setEditingFile(null);
   };
 
+  const handleDownload = (file) => {
+    const content = `
+illyBox - File Download
+=======================
+File Name:   ${file.name}
+Folder:      ${file.folder}
+Size:        ${file.size}
+Date:        ${file.date}
+Status:      ${file.status}
+Description: ${file.description || "No description provided"}
+    `.trim();
+
+    const blob = new Blob([content], { type: "text/plain" });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement("a");
+    a.href     = url;
+    a.download = file.name;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   const sortedFiltered = useMemo(() => {
     const searched = files.filter((f) =>
       f.name.toLowerCase().includes(search.toLowerCase())
     );
-
     return [...searched].sort((a, b) => {
       switch (sortBy) {
         case "name-asc":  return a.name.localeCompare(b.name);
@@ -57,6 +77,7 @@ export const Dashboard = () => {
         <nav>
           <p className="active-link">Home</p>
           <p onClick={() => navigate("/file")}>Files</p>
+          <p onClick={() => navigate("/upload")}>Upload</p>
           <p>Images</p>
           <p>Shared</p>
         </nav>
@@ -116,6 +137,7 @@ export const Dashboard = () => {
               <span>{file.folder}</span>
               <span>{file.date}</span>
               <span>
+                <button onClick={() => handleDownload(file)}>Download</button>
                 <button onClick={() => handleEditClick(file)}>Edit</button>
                 <button onClick={() => {
                   if (window.confirm(`Delete "${file.name}"?`)) {

@@ -47,6 +47,7 @@ export const Upload = () => {
           <p onClick={() => navigate("/")}>Home</p>
           <p onClick={() => navigate("/file")}>Files</p>
           <p className="active-link">Upload</p>
+          <p>Images</p>
           <p>Shared</p>
           <StorageBar />
           <button className="dark-mode-btn" onClick={toggleDarkMode}>
